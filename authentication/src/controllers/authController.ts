@@ -11,6 +11,29 @@ export const registerUser = async (
 ): Promise<void> => {
   const { firstname, lastname, username, email, password } = req.body;
 
+  const errorLog = [];
+
+  if (!firstname) {
+    errorLog.push("First name is required");
+  }
+  if (!lastname) {
+    errorLog.push("Last name is required");
+  }
+  if (!username) {
+    errorLog.push("Username is required");
+  }
+  if (!email) {
+    errorLog.push("Email is required");
+  }
+  if (!password) {
+    errorLog.push("Password is required");
+  }
+
+  if (errorLog.length > 0) {
+    res.status(400).json({ errors: errorLog });
+    return;
+  }
+
   try {
     // Check if user already exists
     let user = await User.findOne({ email });
@@ -42,6 +65,19 @@ export const registerUser = async (
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
+
+  const errorLog = [];
+  if (!email) {
+    errorLog.push("Email is required");
+  }
+  if (!password) {
+    errorLog.push("Password is required");
+  }
+
+  if (errorLog.length > 0) {
+    res.status(400).json({ errors: errorLog });
+    return;
+  }
 
   try {
     // Check if user exists
