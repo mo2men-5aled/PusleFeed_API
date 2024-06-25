@@ -115,3 +115,20 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     res.status(500).send("Server Error");
   }
 };
+
+export const validateToken = (req: Request, res: Response): void => {
+  const token: any = req.header("Authorization")?.split(" ")[1];
+  console.log(token);
+
+  if (!token) {
+    res.status(401).json({ message: "No token, authorization denied" });
+  }
+
+  try {
+    const secret = process.env.JWT_SECRET as string;
+    const decoded = jwt.verify(token, secret);
+    res.status(200).json({ user: decoded });
+  } catch (error) {
+    res.status(401).json({ message: "Token is not valid" });
+  }
+};
